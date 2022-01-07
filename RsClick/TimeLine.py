@@ -90,20 +90,20 @@ class TimeLine:
 class MouseClickEvent:
 
     def __init__(self, button : str, releasedelay = [.0824, .223], doubleclick = False, hold : float = 0.0) -> None:
-        self.button = button
+        self.button = strtobtn(button)
         self.releasedelay = releasedelay
         self.doubleclick = doubleclick
         self.hold = hold
     
     def execute(self, verbose : bool):
         if(self.doubleclick):
-            toolkit.MOUSE_CONTROLLER.click(toolkit.strtobtn(self.button), 2)
+            MOUSE_CONTROLLER.click(self.button, 2)
             if verbose:
                 print("Mouse doubleclicked")
         else:
             if verbose:
                 print("Mouse clicked")
-            toolkit.MOUSE_CONTROLLER.press(toolkit.strtobtn(self.button))
+            MOUSE_CONTROLLER.press(self.button)
             if(self.hold == 0.0):
                 if verbose:
                     print(f"Holding for {self.hold} seconds.")
@@ -112,7 +112,7 @@ class MouseClickEvent:
                     print("Mouse released.")
             else:
                 PauseEvent(self.hold).execute(False)
-            toolkit.MOUSE_CONTROLLER.release(toolkit.strtobtn(self.button))
+            MOUSE_CONTROLLER.release(self.button)
 
 class MouseMoveEvent:
     def __init__(self, x : int, y: int, relative = False) -> None:
@@ -124,11 +124,11 @@ class MouseMoveEvent:
         if(self.relative):
             if verbose:
                 print(f"Mouse moved to ({self.x}, {self.y})")
-            toolkit.MOUSE_CONTROLLER.move(self.x, self.y)
+            MOUSE_CONTROLLER.move(self.x, self.y)
         else:
             if verbose:
                 print(f"Mouse moved by ({self.x}, {self.y}) relative to your previous position.")
-            toolkit.MOUSE_CONTROLLER.position = (self.x, self.y)
+            MOUSE_CONTROLLER.position = (self.x, self.y)
 
 
 
@@ -141,7 +141,7 @@ class PauseEvent:
         if verbose:
             print(f"Sleeping for {self.time} seconds!")
         if type(self.time) == list:
-            time.sleep(toolkit.rfloatrange(self.time[0], self.time[1]))
+            time.sleep(rfloatrange(self.time[0], self.time[1]))
         else:
             time.sleep(self.time)
         

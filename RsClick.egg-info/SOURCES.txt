@@ -1,0 +1,8 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+RsClick.egg-info/PKG-INFO
+RsClick.egg-info/SOURCES.txt
+RsClick.egg-info/dependency_links.txt
+RsClick.egg-info/top_level.txt
