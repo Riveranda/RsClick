@@ -13,6 +13,7 @@ class InvalidIntervalError(Exception):
     def __init__(self):
         self.message = "First value must be less than second value for a time range."
         super().__init__(self.message)
+        
 class InvanlidButtonError(Exception):
     """Exception raised when there is an invalid button"""
 
