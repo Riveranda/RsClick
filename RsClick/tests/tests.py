@@ -97,9 +97,38 @@ class TestPauseEvent(unittest.TestCase):
             print(e)
             exception_was_thrown = True
         self.assertFalse(exception_was_thrown)
+class TestKeyboard(unittest.TestCase):
+
+    def test_key_press(self):
+        exception_was_thrown = False
+        try:
+            KeyEvent("a").execute(False)
+        except Exception as e: 
+            print(e)
+            exception_was_thrown = True
+        self.assertFalse(exception_was_thrown)
+    
+    def test_key_press_hold(self):
+        exception_was_thrown = False
+        try:
+            KeyEvent("a", hold=.1).execute(False)
+        except Exception as e: 
+            print(e)
+            exception_was_thrown = True
+        self.assertFalse(exception_was_thrown)
+
+    def test_key_press_release_delay(self):
+        exception_was_thrown = False
+        try:
+            KeyEvent("a", releasedelay=[.1, .2]).execute(False)
+        except Exception as e: 
+            print(e)
+            exception_was_thrown = True
+        self.assertFalse(exception_was_thrown)
     
 
         
 
 if __name__ == '__main__':
+    print("WARNING: THESE TESTS WILL MOVE YOUR MOUSE AND INPUT KEYS TO TEST FUNCTIONALITY")
     unittest.main()

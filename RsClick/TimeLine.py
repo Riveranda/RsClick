@@ -1,9 +1,11 @@
 import time
 import random
-from pynput.mouse import Button, Controller
-from pynput.keyboard import Key
+from pynput.mouse import Button, Controller as mctrl
+from pynput.keyboard import Key, Controller as kctrl
 
-MOUSE_CONTROLLER = Controller()
+
+MOUSE_CONTROLLER = mctrl()
+KEYBOARD_CONTROLLER = kctrl()
 
 class InvalidIntervalError(Exception):
     """Exception raised in the event the alpha value of a time interval is less than the beta value."""
@@ -129,6 +131,38 @@ class MouseMoveEvent:
             if verbose:
                 print(f"Mouse moved by ({self.x}, {self.y}) relative to your previous position.")
             MOUSE_CONTROLLER.position = (self.x, self.y)
+
+class KeyEvent:
+
+    def __init__(self, key : str, releasedelay = [.0824, .223], hold : float = 0.0) -> None:
+        self.key = strtokey(key)
+        self.releasedelay = releasedelay
+        self.hold = hold
+    
+    def execute(self, verbose : bool):
+        if verbose:
+            print(f"Key {self.key} pressed")
+            KEYBOARD_CONTROLLER.press(self.key)
+            if(self.hold == 0.0):
+                if verbose:
+                    print(f"Holding for {self.hold} seconds.")
+                PauseEvent(self.releasedelay).execute(False)
+                if verbose:
+                    print("Key released.")
+            else:
+                PauseEvent(self.hold).execute(False)
+            MOUSE_CONTROLLER.release(self.key)
+
+class TypeEvent:
+
+    def __init__(self, str : str) -> None:
+        self.str = str
+    
+    def execute(self, verbose : bool):
+        if verbose:
+            print(f"Typing message: {self.str}")
+            KEYBOARD_CONTROLLER.type(self.str)
+
 
 
 
