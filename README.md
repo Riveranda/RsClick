@@ -28,7 +28,7 @@ MouseClickEvent(button : str)
 *doubleclick:*(Bool) Default is False. If overriden to True it will double click.  
 *hold:* (Float) How long you wish the button to be held down for. Please note if this value is set it will override the releasedelay randomization range.  
 ### MouseMoveEvent  
-Please be aware this will instantly move the mouse, and if you are trying to avoid bot detection this is an absolutely terrible idea. 
+Please be aware this will instantly move the mouse, and if you are trying to avoid bot detection this is an absolutely terrible idea.  
 **Usage**  
 MouseMoveEvent(x, y)  
 **Parameters**  
