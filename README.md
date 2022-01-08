@@ -21,27 +21,27 @@ This script when ran will pause for 5.6 seconds, click the left mouse button, an
 
 ### MouseClickEvent
 **Usage:**
-MouseClickEvent(button : str)
+MouseClickEvent(button : str)  
 **Parameters:** 
-*button:* (String) The button you wish to press. Options are: "l", "left", "r", and "right". <br>
-*releasedelay:* (List(Float, Float)). Represents the time in seconds between the button being pressed and released. By default a random float between. 0824 and .223 will be generated. You may override this, and provide a new range for which this value to be calculated. <br>
-*doubleclick:*(Bool) Default is False. If overriden to True it will double click. <br>
-*hold:* (Float) How long you wish the button to be held down for. Please note if this value is set it will override the releasedelay randomization range.<br>
+*button:* (String) The button you wish to press. Options are: "l", "left", "r", and "right".  
+*releasedelay:* (List(Float, Float)). Represents the time in seconds between the button being pressed and released. By default a random float between. 0824 and .223 will be generated. You may override this, and provide a new range for which this value to be calculated.  
+*doubleclick:*(Bool) Default is False. If overriden to True it will double click.  
+*hold:* (Float) How long you wish the button to be held down for. Please note if this value is set it will override the releasedelay randomization range.  
 ### MouseMoveEvent
 Please be aware this will instantly move the mouse, and if you are trying to avoid bot detection this is an absolutely terrible idea. 
 **Usage**
 MouseMoveEvent(x, y)
 **Parameters**
-*x:* (Int) The x value of the screen to move the mouse to.<br>
-*y:* (Int) The y value of the screen to move the mouse to.<br>
-*relative:* (Bool) Defaulted to false. If overriden to true the mouse will be moved by x and y relative to the current position. <br>
+*x:* (Int) The x value of the screen to move the mouse to.  
+*y:* (Int) The y value of the screen to move the mouse to.  
+*relative:* (Bool) Defaulted to false. If overriden to true the mouse will be moved by x and y relative to the current position.  
 ### KeyEvent
 **Usage**
 KeyEvent(key)
 **Parameters**
-*key:* (Str) The string representation of the key which you wish to press. "a", "esc", "enter", "alt" etc. <br>
-*releasedelay:* (Float) See above under MouseClickEvent.<br>
-*hold:* (Float) See above under MouseClickEvent.<br>
+*key:* (Str) The string representation of the key which you wish to press. "a", "esc", "enter", "alt" etc.  
+*releasedelay:* (Float) See above under MouseClickEvent.  
+*hold:* (Float) See above under MouseClickEvent.  
 ### TypeEvent
 **Usage**
 TypeEvent("Message")
