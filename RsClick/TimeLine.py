@@ -10,16 +10,20 @@ KEYBOARD_CONTROLLER = kctrl()
 class InvalidIntervalError(Exception):
     """Exception raised in the event the alpha value of a time interval is less than the beta value."""
 
+
     def __init__(self):
         self.message = "First value must be less than second value for a time range."
         super().__init__(self.message)
         
+        
 class InvanlidButtonError(Exception):
     """Exception raised when there is an invalid button"""
+
 
     def __init__(self) -> None:
         self.message = "Invalid button, options are \"l\" \"left\" \"r\" or \"right\""
         super().__init__(self.message)
+
 
 def strtobtn(str : str) -> object:
     str = str.lower().strip().replace(" " , "")
@@ -67,19 +71,25 @@ def strtokey(str : str) -> object:
     }
     return dict[str] if str in dict else str
 
+
 def rfloatrange(a : float, b : float) -> float:
     return random.uniform(a, b)
+
 
 def rintrange(a : int, b : int) -> int :
     return random.randrange(a, b)
     
 
 class TimeLine:
+    """Respsonsible for storing and executing events. """
+
+
     def __init__(self, *events, startpause : float = 5.0, verbose = True, repeat=True) -> None:
         self.events = events
         self.startpause = startpause
         self.verbose = verbose
         self.repeat = repeat
+
 
     def start(self):
         PauseEvent(self.startpause).execute(True)
@@ -92,12 +102,14 @@ class TimeLine:
 
 class MouseClickEvent:
 
+
     def __init__(self, button : str, releasedelay = [.0824, .223], doubleclick = False, hold : float = 0.0) -> None:
         self.button = strtobtn(button)
         self.releasedelay = releasedelay
         self.doubleclick = doubleclick
         self.hold = hold
     
+
     def execute(self, verbose : bool):
         if(self.doubleclick):
             MOUSE_CONTROLLER.click(self.button, 2)
@@ -118,10 +130,13 @@ class MouseClickEvent:
             MOUSE_CONTROLLER.release(self.button)
 
 class MouseMoveEvent:
+
+
     def __init__(self, x : int, y: int, relative = False) -> None:
         self.x = x
         self.y = y
         self.relative = relative
+
 
     def execute(self, verbose):
         if(self.relative):
@@ -133,13 +148,16 @@ class MouseMoveEvent:
                 print(f"Mouse moved by ({self.x}, {self.y}) relative to your previous position.")
             MOUSE_CONTROLLER.position = (self.x, self.y)
 
+
 class KeyEvent:
+
 
     def __init__(self, key : str, releasedelay = [.0824, .223], hold : float = 0.0) -> None:
         self.key = strtokey(key)
         self.releasedelay = releasedelay
         self.hold = hold
     
+
     def execute(self, verbose : bool):
         if verbose:
             print(f"Key {self.key} pressed")
@@ -154,23 +172,26 @@ class KeyEvent:
                 PauseEvent(self.hold).execute(False)
             MOUSE_CONTROLLER.release(self.key)
 
+
 class TypeEvent:
+
 
     def __init__(self, str : str) -> None:
         self.str = str
     
+
     def execute(self, verbose : bool):
         if verbose:
             print(f"Typing message: {self.str}")
             KEYBOARD_CONTROLLER.type(self.str)
 
 
-
-
 class PauseEvent:
     
+
     def __init__(self, time : object) -> None:
         self.time = time
+
 
     def execute(self, verbose : bool):
         if verbose:
