@@ -7,6 +7,7 @@ from pynput.keyboard import Key, Controller as kctrl
 MOUSE_CONTROLLER = mctrl()
 KEYBOARD_CONTROLLER = kctrl()
 
+
 class InvalidIntervalError(Exception):
     """Exception raised in the event the alpha value of a time interval is less than the beta value."""
 
@@ -15,12 +16,12 @@ class InvalidIntervalError(Exception):
         self.message = "First value must be less than second value for a time range."
         super().__init__(self.message)
         
-        
+
 class InvanlidButtonError(Exception):
     """Exception raised when there is an invalid button"""
 
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.message = "Invalid button, options are \"l\" \"left\" \"r\" or \"right\""
         super().__init__(self.message)
 
@@ -78,17 +79,36 @@ def rfloatrange(a : float, b : float) -> float:
 
 def rintrange(a : int, b : int) -> int :
     return random.randrange(a, b)
+
+class PauseEvent:
     
+
+    def __init__(self, time : object) -> None:
+        self.time = time
+
+
+    def execute(self, verbose : bool):
+        if verbose:
+            print(f"Sleeping for {self.time} seconds!")
+        if type(self.time) == list:
+            time.sleep(rfloatrange(self.time[0], self.time[1]))
+        else:
+            time.sleep(self.time)    
+
+    def getTime(self) -> float:
+        return self.time
+
 
 class TimeLine:
     """Respsonsible for storing and executing events. """
 
 
-    def __init__(self, *events, startpause : float = 5.0, verbose = True, repeat=True) -> None:
+    def __init__(self, *events, startpause : float = 5.0, verbose = True, repeat=True, defaultEventPause = 0.0) -> None:
         self.events = events
         self.startpause = startpause
         self.verbose = verbose
         self.repeat = repeat
+        self.defaulteventpause = PauseEvent(defaultEventPause)
 
 
     def start(self):
@@ -96,8 +116,16 @@ class TimeLine:
         while True:
             for event in self.events:
                 event.execute(self.verbose)
+                if self.defaulteventpause.getTime != 0:
+                    self.defaulteventpause.execute()
             if not self.repeat:
                 break
+
+
+    def setDefaultEventPause(self, time : float):
+        self.defaulteventpause = PauseEvent(time)
+
+
 
 
 class MouseClickEvent:
@@ -185,19 +213,4 @@ class TypeEvent:
             print(f"Typing message: {self.str}")
             KEYBOARD_CONTROLLER.type(self.str)
 
-
-class PauseEvent:
-    
-
-    def __init__(self, time : object) -> None:
-        self.time = time
-
-
-    def execute(self, verbose : bool):
-        if verbose:
-            print(f"Sleeping for {self.time} seconds!")
-        if type(self.time) == list:
-            time.sleep(rfloatrange(self.time[0], self.time[1]))
-        else:
-            time.sleep(self.time)
         
