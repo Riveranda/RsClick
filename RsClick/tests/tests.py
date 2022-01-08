@@ -2,20 +2,13 @@ import unittest
 import sys
 from pynput.keyboard import Key
 from pynput.mouse import Button
+import logging as log
   
 # setting path
 sys.path.append('../RsClick')
   
 # importing
 from RsClick.TimeLine import *
-
-
-class CustomAssertions:
-    def assertNotRaises(self, excecutable):
-        try:
-            excecutable()
-        except:
-            raise AssertionError("Exception was raised")
 
 class TestHelpers(unittest.TestCase):
 
@@ -98,5 +91,5 @@ class TestKeyboard(unittest.TestCase):
             MouseClickEvent("l", releasedelay=[3]).execute()
 
 if __name__ == '__main__':
-    print("WARNING: THESE TESTS WILL MOVE YOUR MOUSE AND INPUT KEYS TO TEST FUNCTIONALITY")
+    log.warning("WARNING: THESE TESTS WILL MOVE YOUR MOUSE AND INPUT KEYS TO TEST FUNCTIONALITY")
     unittest.main()
