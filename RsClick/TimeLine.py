@@ -17,7 +17,7 @@ class InvalidIntervalError(Exception):
         super().__init__(self.message)
         
 
-class InvanlidButtonError(Exception):
+class InvalidButtonError(Exception):
     """Exception raised when there is an invalid button"""
 
 
@@ -35,7 +35,7 @@ def strtobtn(str : str) -> object:
         "right" : Button.right
     }
     if str not in dict:
-        raise InvanlidButtonError()
+        raise InvalidButtonError
     return dict[str]
 
 
@@ -87,7 +87,7 @@ class PauseEvent:
         self.time = time
 
 
-    def execute(self, verbose : bool):
+    def execute(self, verbose : bool = False):
         if verbose:
             print(f"Sleeping for {self.time} seconds!")
         if type(self.time) == list:
@@ -112,10 +112,10 @@ class TimeLine:
 
 
     def start(self):
-        PauseEvent(self.startpause).execute(True)
+        PauseEvent(self.startpause).execute(verbose=True)
         while True:
             for event in self.events:
-                event.execute(self.verbose)
+                event.execute(verbose=self.verbose)
                 if self.defaulteventpause.getTime != 0:
                     self.defaulteventpause.execute()
             if not self.repeat:
@@ -138,7 +138,7 @@ class MouseClickEvent:
         self.hold = hold
     
 
-    def execute(self, verbose : bool):
+    def execute(self, verbose : bool = False):
         if(self.doubleclick):
             MOUSE_CONTROLLER.click(self.button, 2)
             if verbose:
@@ -148,13 +148,15 @@ class MouseClickEvent:
                 print("Mouse clicked")
             MOUSE_CONTROLLER.press(self.button)
             if(self.hold == 0.0):
+                if len(self.releasedelay) != 2 or self.releasedelay[0] > self.releasedelay[1]:
+                    raise InvalidIntervalError
                 if verbose:
                     print(f"Holding for {self.hold} seconds.")
-                PauseEvent(self.releasedelay).execute(False)
-                if verbose:
-                    print("Mouse released.")
+                PauseEvent(self.releasedelay).execute()
             else:
-                PauseEvent(self.hold).execute(False)
+                PauseEvent(self.hold).execute()
+            if verbose:
+                    print("Mouse released.")
             MOUSE_CONTROLLER.release(self.button)
 
 class MouseMoveEvent:
@@ -166,7 +168,7 @@ class MouseMoveEvent:
         self.relative = relative
 
 
-    def execute(self, verbose):
+    def execute(self, verbose : bool = False):
         if(self.relative):
             if verbose:
                 print(f"Mouse moved to ({self.x}, {self.y})")
@@ -175,7 +177,6 @@ class MouseMoveEvent:
             if verbose:
                 print(f"Mouse moved by ({self.x}, {self.y}) relative to your previous position.")
             MOUSE_CONTROLLER.position = (self.x, self.y)
-
 
 class KeyEvent:
 
@@ -186,19 +187,22 @@ class KeyEvent:
         self.hold = hold
     
 
-    def execute(self, verbose : bool):
+    def execute(self, verbose : bool = False):
         if verbose:
             print(f"Key {self.key} pressed")
-            KEYBOARD_CONTROLLER.press(self.key)
-            if(self.hold == 0.0):
-                if verbose:
-                    print(f"Holding for {self.hold} seconds.")
-                PauseEvent(self.releasedelay).execute(False)
-                if verbose:
-                    print("Key released.")
-            else:
-                PauseEvent(self.hold).execute(False)
-            MOUSE_CONTROLLER.release(self.key)
+        KEYBOARD_CONTROLLER.press(self.key)
+        if(self.hold == 0.0):
+            if len(self.releasedelay) != 2 or self.releasedelay[0] > self.releasedelay[1]:
+                print(self.releasedelay)
+                raise InvalidIntervalError
+            if verbose:
+                print(f"Holding for {self.hold} seconds.")
+            PauseEvent(self.releasedelay).execute()
+            if verbose:
+                print("Key released.")
+        else:
+            PauseEvent(self.hold).execute()
+        KEYBOARD_CONTROLLER.release(self.key)
 
 
 class TypeEvent:
@@ -208,9 +212,21 @@ class TypeEvent:
         self.str = str
     
 
-    def execute(self, verbose : bool):
+    def execute(self, verbose : bool = False):
         if verbose:
             print(f"Typing message: {self.str}")
-            KEYBOARD_CONTROLLER.type(self.str)
+        KEYBOARD_CONTROLLER.type(self.str)
+
+class MouseScrollEvent:
+
+
+    def __init__(self, delta : int) -> None:
+        self.delta = delta
+
+    
+    def execute(self, verbose : bool = False):
+        if verbose:
+            print(f"Mouse scrolled by {self.delta}")
+        MOUSE_CONTROLLER.scroll(0 , self.delta)
 
         

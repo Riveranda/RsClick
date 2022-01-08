@@ -10,6 +10,13 @@ sys.path.append('../RsClick')
 from RsClick.TimeLine import *
 
 
+class CustomAssertions:
+    def assertNotRaises(self, excecutable):
+        try:
+            excecutable()
+        except:
+            raise AssertionError("Exception was raised")
+
 class TestHelpers(unittest.TestCase):
 
     def test_range(self):
@@ -33,101 +40,62 @@ class TestHelpers(unittest.TestCase):
 class TestMouse(unittest.TestCase):
 
     def test_doubleclick(self):
-        exception_was_thrown = False
-        try:
-            MouseClickEvent("l", doubleclick=True).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        MouseClickEvent("l", doubleclick=True).execute()
+
     
     def test_hold(self):
-        exception_was_thrown = False
-        try:
-            MouseClickEvent("l", hold=.5).execute(False)
-        except Exception as e:
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        MouseClickEvent("l", hold=.5).execute()
+
     
     def test_releasedelay(self):
-        exception_was_thrown = False
-        try:
-            MouseClickEvent("l", releasedelay=[.3, .8]).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        MouseClickEvent("l", releasedelay=[.3, .8]).execute()
+
     
     def test_mouse_move(self):
-        exception_was_thrown = False
-        try:
-            MouseMoveEvent(500,500).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        MouseMoveEvent(500,500).execute()
+
     
+    def test_mouse_move_invalid(self):
+        MouseMoveEvent(-100000,-100000).execute()
+        MouseMoveEvent(100000,100000).execute()
+
     def test_mouse_move_relative(self):
-        exception_was_thrown = False
-        try:
-            MouseMoveEvent(100,-500, relative=True).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        MouseMoveEvent(100,-500, relative=True).execute()
 
+    def test_mouse_scroll(self):
+        MouseScrollEvent(2).execute()
 
+    def test_invalid_button_exception(self):
+        with self.assertRaises(InvalidButtonError):
+            MouseClickEvent("g").execute()
+    
+    def test_invalid_interval_exception(self):
+        with self.assertRaises(InvalidIntervalError):
+            MouseClickEvent("l", releasedelay=[5, 3]).execute()
+        with self.assertRaises(InvalidIntervalError):
+            MouseClickEvent("l", releasedelay=[3]).execute()
+        
 class TestPauseEvent(unittest.TestCase):
 
     def test_pause_int(self):
-        exception_was_thrown = False
-        try:
-            PauseEvent(.1).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        PauseEvent(.1).execute()
     
     def test_pause_range(self):
-        exception_was_thrown = False
-        try:
-            PauseEvent([.1, .2]).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        PauseEvent([.1, .2]).execute()
 class TestKeyboard(unittest.TestCase):
 
     def test_key_press(self):
-        exception_was_thrown = False
-        try:
-            KeyEvent("a").execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
-    
+        KeyEvent("a").execute()
+
     def test_key_press_hold(self):
-        exception_was_thrown = False
-        try:
-            KeyEvent("a", hold=.1).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
+        KeyEvent("a", hold=.1).execute()
 
     def test_key_press_release_delay(self):
-        exception_was_thrown = False
-        try:
-            KeyEvent("a", releasedelay=[.1, .2]).execute(False)
-        except Exception as e: 
-            print(e)
-            exception_was_thrown = True
-        self.assertFalse(exception_was_thrown)
-    
-
-        
+        KeyEvent("a", releasedelay=[.1, .2]).execute()
+        with self.assertRaises(InvalidIntervalError):
+            MouseClickEvent("l", releasedelay=[5, 3]).execute()
+        with self.assertRaises(InvalidIntervalError):
+            MouseClickEvent("l", releasedelay=[3]).execute()
 
 if __name__ == '__main__':
     print("WARNING: THESE TESTS WILL MOVE YOUR MOUSE AND INPUT KEYS TO TEST FUNCTIONALITY")
