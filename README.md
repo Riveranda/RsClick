@@ -1,6 +1,6 @@
-# Welcome to RsEdit!
+# Welcome to RsClick!
 
-Hi! Welcome to RsEdit, a brand new method of automating tasks with Python. RsEdit is an framework built on top of pynput which allows you to easily create mouse and keyboard macros; allowing you to automate redundant tasks. 
+Hi! Welcome to RsClick, a brand new method of automating tasks with Python. RsClick is an framework built on top of pynput which allows you to easily create mouse and keyboard macros; allowing you to automate redundant tasks. 
 
 ## A brief overview
 The primary object you should be familiar with is the TimeLine object. This object is responsible for storing all of your events and executing them. 
@@ -14,7 +14,7 @@ def main():
 	PauseEvent(5.6),
 	MouseClickEvent("l"),
 	MouseMoveEvent(50, -30, relative=True)
-).start()
+	).start()
 ```
 
 This script when ran will pause for 5.6 seconds, click the left mouse button, and then move the mouse +50x and -30y relative to its current position. 
