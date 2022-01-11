@@ -1,13 +1,66 @@
+# MIT License
+
+# Copyright 2022 Svetlana Ankundinov
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
 import random
 from pynput.mouse import Button
 from pynput.keyboard import Key
 
-def rfloatrange(a : float, b : float) -> float:
-    return random.uniform(a, b)
+def rfloatrange(lower : float, upper : float) -> float:
+    """Generate a randomized float within the provided range. 
+
+    Args:
+        lower (float): Lower bound
+        upper (float): Upper bound
+
+    Returns:
+        float: Randomized float within the provided range. 
+        
+    Raises:
+        InvalidIntervalError: Raised if the provided interval is invalid.
+
+    """
+    if lower > upper:
+        raise InvalidIntervalError
+    return random.uniform(lower, upper)
 
 
-def rintrange(a : int, b : int) -> int :
-    return random.randrange(a, b)
+def rintrange(lower : int, upper : int) -> int :
+    """Generate a randomized integer within the provided range.
+
+    Args:
+        lower (int): Lower bound
+        upper (int): Upper bound
+
+    Returns:
+        int: Randomized integer within the provided range. 
+        
+    Raises:
+        InvalidIntervalError: Raised if the provided interval is invalid.
+
+    """
+    if lower > upper:
+        raise InvalidIntervalError
+    return random.randrange(lower, upper)
 
 
 class InvalidIntervalError(Exception):
@@ -36,6 +89,18 @@ class InvalidEventError(Exception):
 
 
 def strtobtn(str : str) -> object:
+    """Converts a string to the button representation.
+
+    Args:
+        str (str): The string to be converted. 
+
+    Raises:
+        InvalidButtonError: Raised if the string passed in is invalid.
+
+    Returns:
+        object: Returns the Button object. 
+    """
+    
     str = str.lower().strip().replace(" " , "")
     dict = {
         "l" : Button.left,
@@ -49,6 +114,15 @@ def strtobtn(str : str) -> object:
 
 
 def strtokey(str : str) -> object:
+    """Converts a string to the key representation.
+
+    Args:
+        str (str): The string to be converted. 
+
+    Returns:
+        Key: Returns the key object or string required by the controller. 
+    """
+    
     str = str.lower().strip().replace(" ", "")
     dict = {
         "tab" : Key.tab,

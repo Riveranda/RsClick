@@ -1,7 +1,29 @@
+# MIT License
+
+# Copyright 2022 Svetlana Ankundinov
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import unittest
 import sys
-from pynput.keyboard import Key
-from pynput.mouse import Button
+from pynput.keyboard import Key, Controller as kctrl
+from pynput.mouse import Button, Controller as mctrl
 import logging as log
 
 # setting path
@@ -11,10 +33,13 @@ sys.path.append('../RsClick')
 from RsClick.TimeLine import *
 from RsClick.utils import *
 
+
 __POS = MOUSE_CONTROLLER.position
+
 
 def reset_mouse():
     MOUSE_CONTROLLER.position = __POS
+    
 class TestHelpers(unittest.TestCase):
 
     def test_range(self):
@@ -42,11 +67,11 @@ class TestMouse(unittest.TestCase):
 
     
     def test_hold(self):
-        MouseClickEvent("l", hold=.5).execute()
+        MouseClickEvent("l", hold=.05).execute()
 
     
     def test_releasedelay(self):
-        MouseClickEvent("l", releasedelay=[.3, .8]).execute()
+        MouseClickEvent("l", releasedelay=[.05, .06]).execute()
 
     
     def test_mouse_move(self):
@@ -114,30 +139,32 @@ class TestTimeLine(unittest.TestCase):
         ).start()
         reset_mouse()
     
-    def test_time_line_invalid(self):
-        with self.assertRaises(InvalidIntervalError):
-            TimeLine(
-                PauseEvent(.005),
-                MouseMoveEvent(500, 500, relative=True),
-                MouseClickEvent("l", releasedelay=[.003, .005]),
-                KeyEvent("enter", releasedelay=[.03, .004]),
-                KeyEvent("a", hold=.005),
+    def test_time_line_invalid_interval(self):
+        timeline = TimeLine(
+            PauseEvent(.005),
+            MouseMoveEvent(500, 500, relative=True),
+            MouseClickEvent("l", releasedelay=[.003, .005]),
+            KeyEvent("enter", releasedelay=[.03, .004]),
+            KeyEvent("a", hold=.005),
                 defaultEventPause=.33,
                 repeat=False
-            ).start()
+            )
+        timeline.start()
+        self.assertIsNotNone(timeline.ERROR)
         reset_mouse()
     
     def test_time_line_invalid_object(self):
-        with self.assertRaises(InvalidEventError):
-            TimeLine(
-                    PauseEvent(.005),
-                    MouseMoveEvent(500, 500, relative=True),
-                    MouseClickEvent("l", releasedelay=[.003, .005]),
-                    KeyEvent("enter", releasedelay=[.003, .004]),
+        timeline = TimeLine(
+            PauseEvent(.005),
+            MouseMoveEvent(500, 500, relative=True),
+            MouseClickEvent("l", releasedelay=[.003, .005]),
+            KeyEvent("enter", releasedelay=[.003, .004]),
                     "Invalid Object",
                     defaultEventPause=.33,
                     repeat=False
-                ).start()
+            )
+        timeline.start()
+        self.assertIsNotNone(timeline.ERROR)
         reset_mouse()
 
 if __name__ == '__main__':
