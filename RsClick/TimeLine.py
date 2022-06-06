@@ -23,7 +23,7 @@
 import logging as log
 from pynput.mouse import Controller as mctrl
 from pynput.keyboard import  Controller as kctrl
-from .utils import *
+from utils import *
 
 
 MOUSE_CONTROLLER = mctrl()
@@ -277,4 +277,20 @@ class MouseScrollEvent(Event):
             log.info(f"Mouse scrolled by {self.delta}")
         MOUSE_CONTROLLER.scroll(0 , self.delta)
 
+class Loop(Event):
+    "Repeats all the events passed in, in order, for the specified number of times"
+
+
+    def __init__(self, *events, repeats : int = 1):
+        self.events = events
+        self.repeats = repeats
+        self.verbose = False
+    
+    def execute(self, verbose : bool = False):
+        for i in range(self.repeats):
+            print(f"Loop {i}")
+            for event in self.events:
+                if not isinstance(event, Event):
+                    raise InvalidEventError
+                event.execute(verbose=self.verbose)
         
